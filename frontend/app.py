@@ -10,6 +10,18 @@ BACKEND_URL = os.getenv(
     f"http://{backend_hostport}" if backend_hostport else "http://backend:8000",
 ).rstrip("/")
 
+
+def backend_urls():
+    urls = [BACKEND_URL]
+
+    if backend_hostport:
+        backend_host = backend_hostport.split(":", 1)[0]
+        public_render_url = f"https://{backend_host}.onrender.com"
+        if public_render_url not in urls:
+            urls.append(public_render_url)
+
+    return urls
+
 st.set_page_config(page_title="Options Flow Screener", layout="wide")
 
 st.markdown(
@@ -42,15 +54,37 @@ atm_trigger = col3.slider("ATM premium", 0.5, 500.0, 4.0, 0.5)
 
 
 def fetch_scan():
-    return requests.get(
-        f"{BACKEND_URL}/scan",
-        params={
-            "price_trigger": price_trigger,
-            "spread_trigger": spread_trigger,
-            "atm_trigger": atm_trigger,
-        },
-        timeout=180,
-    ).json()
+    last_error = None
+    for url in backend_urls():
+        try:
+            response = requests.get(
+                f"{url}/scan",
+                params={
+                    "price_trigger": price_trigger,
+                    "spread_trigger": spread_trigger,
+                    "atm_trigger": atm_trigger,
+                },
+                timeout=180,
+            )
+            response.raise_for_status()
+            return response.json()
+        except Exception as ex:
+            last_error = ex
+
+    raise last_error
+
+
+def fetch_alerts():
+    last_error = None
+    for url in backend_urls():
+        try:
+            response = requests.get(f"{url}/alerts", timeout=20)
+            response.raise_for_status()
+            return response.json()
+        except Exception as ex:
+            last_error = ex
+
+    raise last_error
 
 
 scan_button = st.button("Rescan")
@@ -208,8 +242,7 @@ st.markdown("---")
 
 st.header("Database Alerts")
 try:
-    response_alerts = requests.get(f"{BACKEND_URL}/alerts", timeout=20)
-    all_data = response_alerts.json()
+    all_data = fetch_alerts()
     if all_data:
         df_all = pd.DataFrame(all_data)
         st.dataframe(df_all)
