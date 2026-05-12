@@ -16,6 +16,8 @@ Open:
 
 This repo includes `render.yaml`, so the easiest deployment path is Render Blueprint deployment.
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/rohir1132yadav/finance)
+
 1. Push this project to GitHub.
 2. Go to Render Dashboard.
 3. Choose **New** -> **Blueprint**.
