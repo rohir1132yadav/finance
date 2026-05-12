@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+sqlalchemy
+pandas
+numpy
+yfinance
+apscheduler
+requests
+psycopg2-binary
+alpaca-py
