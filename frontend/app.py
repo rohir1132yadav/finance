@@ -1,8 +1,14 @@
+import os
+
 import pandas as pd
 import requests
 import streamlit as st
 
-BACKEND_URL = "http://backend:8000"
+backend_hostport = os.getenv("BACKEND_HOSTPORT")
+BACKEND_URL = os.getenv(
+    "BACKEND_URL",
+    f"http://{backend_hostport}" if backend_hostport else "http://backend:8000",
+).rstrip("/")
 
 st.set_page_config(page_title="Options Flow Screener", layout="wide")
 

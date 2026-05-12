@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: finance-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: ALPACA_API_KEY
+        sync: false
+      - key: ALPACA_SECRET
+        sync: false
+
+  - type: web
+    name: finance-frontend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    envVars:
+      - key: BACKEND_HOSTPORT
+        fromService:
+          type: web
+          name: finance-backend
+          property: hostport
