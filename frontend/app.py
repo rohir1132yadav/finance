@@ -195,7 +195,7 @@ else:
                     {status_html}
                 </div>
                 <div style='display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:16px;'>
-                    <div><strong style='font-size:24px;'>${price:.2f}</strong><div class='stat-label'>Current price</div></div>
+                    <div><strong style='font-size:24px;'>Rs{price:.2f}</strong><div class='stat-label'>Current price</div></div>
                     <div><strong style='font-size:24px; color:{change_color};'>{change:+.2f}%</strong><div class='stat-label'>Day change</div></div>
                     <div><strong style='font-size:24px;'>{atm_strike}</strong><div class='stat-label'>ATM strike</div></div>
                 </div>
